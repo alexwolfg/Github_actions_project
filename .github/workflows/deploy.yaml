@@ -53,9 +53,16 @@ jobs:
         run: npm run lint:all
 
       - name: Run all scripts
-        run: script/url-checker.js
         env: 
           URL_CHECKER_TIMEOUT: ${{ vars.URL_CHECKER_TIMEOUT }}
+        run: |
+          for file in script/*; do
+            if [[ "$file" == *.js ]]; then
+              node "$file"
+            elif [ -x "$file" ]; then
+              "$file"
+            fi
+          done
 
   build:
     needs: test
