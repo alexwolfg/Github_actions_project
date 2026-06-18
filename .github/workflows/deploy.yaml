@@ -47,7 +47,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependecies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run the linters
         run: npm test
