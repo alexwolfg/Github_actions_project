@@ -20,8 +20,27 @@ concurrency:
 
 jobs:
   test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+      
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ">=18.0"
+          cache: "npm"
 
+      - name: Install dependecies
+        run: npm ci
 
+      - name: Run the linters
+        run: npm test
+
+      - name: Run all scripts
+        run: script/url-checker.js
+        env: 
+          URL_CHECKER_TIMEOUT: ${{ vars.URL_CHECKER_TIMEOUT }}
 
   build:
 
