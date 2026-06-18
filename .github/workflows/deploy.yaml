@@ -50,7 +50,7 @@ jobs:
         run: npm ci --ignore-scripts
 
       - name: Run the linters
-        run: npm run lint
+        run: npm run lint:all
 
       - name: Run all scripts
         run: script/url-checker.js
