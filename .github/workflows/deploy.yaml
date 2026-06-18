@@ -66,6 +66,31 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build site
+        env: 
+          PATH_PREFIX: /${{ github.event.repository.name }}/
+        run: npm run eleventy_prod
+
+      - name: Upload the contents
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
 
   deploy:
-    
+    needs: [test, build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download build site
+        uses: actions/download-artifact@v8
+        with:
+          path: "_site"
+
+      - name: Add issue
+        run: |
+          gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
+
+          gh issue create --title "$(date) - Deployment: ${{ outputs.deployment }}"
+
+          gh issue comment ${{ github.event.issue.number }} \
+          --body-file ${{ URL }}
