@@ -48,6 +48,7 @@ jobs:
 
       - name: Install dependecies
         run: |
+          npm install pagefind@latest
           npm install 
           npm ci --ignore-scripts
 
