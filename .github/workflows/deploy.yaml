@@ -12,7 +12,10 @@ on:
       branches:
         - main
 
-# permissions:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 concurrency:
 # group: 
@@ -43,7 +46,26 @@ jobs:
           URL_CHECKER_TIMEOUT: ${{ vars.URL_CHECKER_TIMEOUT }}
 
   build:
+    needs: test
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
 
+      - name: Setup pages
+        uses: actions/configure-pages@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: ">=18.0"
+          cache: "npm"
+        
+      - name: Install dependencies
+        run: npm ci
 
 
   deploy:
+    
