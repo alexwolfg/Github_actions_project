@@ -6,19 +6,31 @@ on:
   push:
     branches:
       - main
-    pull_request:
-      types:
-        - opened
-      branches:
-        - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "LICENSE"
+
+  pull_request:
+    types:
+      - opened
+    branches:
+      - main
+    paths-ignore:
+      - ".gitignore"
+      - "README.md"
+      - "CONTRIBUTING.md"
+      - "LICENSE"
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  issues: write
 
 concurrency:
-# group: 
+  group: deploy-workflow-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -26,12 +38,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
       
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: ">=18.0"
+          node-version: 18
           cache: "npm"
 
       - name: Install dependecies
@@ -48,19 +60,17 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Setup pages
         uses: actions/configure-pages@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v4
         with:
-          node-version: ">=18.0"
+          node-version: 18
           cache: "npm"
         
       - name: Install dependencies
@@ -80,17 +90,30 @@ jobs:
     needs: [test, build]
     runs-on: ubuntu-latest
 
+    environment:
+      name: github-pages
+      url: ${{{ steps.deployment.outputs.page_url }}}
+
     steps:
       - name: Download build site
         uses: actions/download-artifact@v8
         with:
+          name: github-pages
           path: "_site"
 
+      - name: Deploy to Github pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
       - name: Add issue
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          gh auth login --with-token <<<"${{ secrets.GITHUB_TOKEN }}"
+          STATUS="succeeded"
 
-          gh issue create --title "$(date) - Deployment: ${{ outputs.deployment }}"
+          if [ "${{ job.status }}" != "success" ]; then
+            STATUS="failed"
+          fi
 
-          gh issue comment ${{ github.event.issue.number }} \
-          --body-file ${{ URL }}
+          gh issue create --title "$(date) - Deployment: ${STATUS}" \
+            --body "URL: ${{ steps.deployment.outputs.page_url }}
