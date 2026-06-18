@@ -81,12 +81,12 @@ jobs:
           cache: "npm"
         
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Build site
         env: 
           PATH_PREFIX: /${{ github.event.repository.name }}/
-        run: npm run eleventy_prod
+        run: npm run eleventy:prod
 
       - name: Upload the contents
         uses: actions/upload-pages-artifact@v3
