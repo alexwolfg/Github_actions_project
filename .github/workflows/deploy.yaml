@@ -118,7 +118,7 @@ jobs:
 
       - name: Add issue
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.G_TOKEN }}
         run: |
           STATUS="succeeded"
 
