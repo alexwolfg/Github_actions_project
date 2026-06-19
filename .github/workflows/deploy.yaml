@@ -127,4 +127,4 @@ jobs:
           fi
 
           gh issue create --title "$(date) - Deployment: ${STATUS}" \
-            --body "URL: ${{ steps.deployment.outputs.page_url }}
+            --body "URL: ${{ steps.deployment.outputs.page_url }}"
