@@ -48,8 +48,8 @@ jobs:
 
       - name: Install dependecies
         run: |
-          npm install pagefind@latest --no-save
-          npm ci --ignore-scripts
+          npm install pagefind@latest --save-dev
+          npm ci
 
       - name: Run the linters
         run: npm run lint:all
@@ -84,8 +84,8 @@ jobs:
         
       - name: Install dependencies
         run: |
-          npm install pagefind@latest --no-save
-          npm ci --ignore-scripts
+          npm install pagefind@latest --save-dev
+          npm ci
 
       - name: Build site
         env: 
