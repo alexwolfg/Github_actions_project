@@ -129,8 +129,8 @@ The job should fail if any of its steps fail.
 Once you've successfully completed your project, you need to submit the following:
 
 1. The `deploy.yml` workflow file
-2. The link to your repository
-3. The link to your published knowledge base website on GitHub pages
+2. The link to your repository -> https://github.com/alexwolfg/Github_actions_project
+3. The link to your published knowledge base website on GitHub pages -> https://alexwolfg.github.io/Github_actions_project/
 
 ## Project Structure
 
