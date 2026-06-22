@@ -46,6 +46,12 @@ jobs:
           node-version: 18
           cache: "npm"
 
+      - name: Store node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules
+
       - name: Install dependecies
         run: |
           npm install pagefind@latest --save-dev
@@ -81,7 +87,13 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-        
+      
+      - name: Store node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-modules
+          
       - name: Install dependencies
         run: |
           npm install pagefind@latest --save-dev
